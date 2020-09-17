@@ -18,7 +18,7 @@ Wait for the provisioning to complete.
 # Running Kubernetes with single worker node:
 Navigate to your local project folder and login to the Kubernetes master vm:
 ```
-vagrant ssh 8s-master
+vagrant ssh k8s-master
 ```
 From your Kubernetes master node list the nodes in your new cluster:
 ```
