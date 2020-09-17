@@ -15,7 +15,7 @@ vagrant up
 ```
 Wait for the provisioning to complete.
 
-# Running Kubernetes with single worker node:
+# Validate your new Kubernetes cluster:
 Navigate to your local project folder and login to the Kubernetes master vm:
 ```
 vagrant ssh k8s-master
