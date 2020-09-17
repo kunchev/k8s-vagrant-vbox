@@ -15,8 +15,7 @@ Clone the repository, navigate to the local repository folder and run:
 ```
 vagrant up
 ```
-Wait for the provisioning to complete
-Detailed information for every step will be displayed during the provisioning process
+Wait for the provisioning to complete, detailed information for every step will be displayed during the provisioning process
 
 # Validate your new Kubernetes cluster:
 Navigate to your local project folder and login to the Kubernetes master vm:
