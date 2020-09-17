@@ -1,15 +1,26 @@
 # k8s-vagrant-vbox
-Deploy local Kubernetes cluster using Vagrand, VirtualBox and Ansible as a provisioner.
+Deploy local Kubernetes cluster using Vagrant, VirtualBox and Ansible as provisioner
 
 
 # Requirements:
-  - Ansible installed on the host machine
-  - Vagrant installed on the host machine
-  - VirtualBox installed on the host machine (current setup uses host-only networking with this addressing: 192.168.50.0)
+  - Ansible installed on the host machine - https://www.ansible.com/overview/it-automation
+  - Vagrant installed on the host machine - https://www.vagrantup.com/intro
+  - VirtualBox installed on the host machine - https://www.virtualbox.org/wiki/VirtualBox
   - Active connection to internet for downloading the required packages
 
+# Installation:
+Clone the repository, navigate to the local folder and run:
+```
+vagrant up
+```
+Wait for the provisioning to complete.
 
 # Running Kubernetes with single worker node:
+Navigate to your local project folder and login to the Kubernetes master vm:
+```
+vagrant ssh 8s-master
+```
+From your Kubernetes master node list the nodes in your new cluster:
 ```
 vagrant@k8s-master:~$ kubectl get nodes
 NAME           STATUS   ROLES    AGE   VERSION
