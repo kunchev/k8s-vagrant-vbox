@@ -9,20 +9,20 @@
 # The host machine must be running Linux or MacOS in order to be able to use the Ansible
 # provisioning mechanism, as well as recent version of OpenSSH thet supports ControlPersist.
 
-# linux distro vagrant box image
+# Linux distribution Vagrant box image:
 OS_IMAGE = "bento/ubuntu-20.04"
 
-# worker nodes count
+# Cluster worker nodes count:
 NODE_COUNT = 1
 
-# ram in megabytes for the master and worker nodes
+# RAM in megabytes for the master and worker nodes:
 VM_RAM_MB = 2024
 
-# cpu count for the master and worker nodes
+# CPU count for the master and worker nodes:
 VM_CPU_COUNT = 2
 
 
-# general setup
+# General setup:
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
     config.vm.provider "virtualbox" do |v|
