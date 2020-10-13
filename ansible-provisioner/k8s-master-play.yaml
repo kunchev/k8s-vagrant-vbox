@@ -2,6 +2,7 @@
 - hosts: all
   become: true
   tasks:
+    # Install Docker and its dependent components
     - name: Install packages that allow apt to be used over HTTPS
       apt:
         name: "{{ packages }}"
@@ -43,6 +44,7 @@
         name: vagrant
         group: docker
 
+    # Kubelet will not start if the system has swap enabled/active, disable swap
     - name: Remove swapfile from /etc/fstab
       mount:
         name: "{{ item }}"
@@ -61,6 +63,7 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
 
+    # Install kubelet, kubeadm and kubectl
     - name: Adding apt repository for Kubernetes
       apt_repository:
         repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
@@ -78,21 +81,25 @@
           - kubeadm 
           - kubectl
 
+    # Configure node ip address
     - name: Configure node ip
       lineinfile:
         create: yes
         path: /etc/default/kubelet
         line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
 
+    #  Restart the kubelet
     - name: Restart kubelet
       service:
         name: kubelet
         daemon_reload: yes
         state: restarted
 
+    # Initialize the Kubernetes cluster with kubeadm
     - name: Initialize the Kubernetes cluster using kubeadm
       command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
 
+    # Setup the kube config file for the vagrant user to access the Kubernetes cluster 
     - name: Setup kubeconfig for vagrant user
       command: "{{ item }}"
       with_items:
@@ -100,18 +107,22 @@
       - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
       - chown vagrant:vagrant /home/vagrant/.kube/config
 
+    # Setup the container networking provider and the network policy engine (calico)
     - name: Install the calico pod network
       become: false
       command: kubectl apply -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
 
+    # Generate kube join command for joining the node to the Kubernetes cluster
     - name: Generate the cluster join command
       command: kubeadm token create --print-join-command
       register: cluster_join
 
+    # Store the command in the file
     - name: Copy the cluster join command to local file
       become: false
       local_action: copy content="{{ cluster_join.stdout_lines[0] }}" dest="./cluster-join"
 
   handlers:
+    # Make sure that docker is started and running
     - name: docker status
       service: name=docker state=started
