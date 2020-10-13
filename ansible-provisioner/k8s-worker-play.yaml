@@ -2,6 +2,7 @@
 - hosts: all
   become: true
   tasks:
+    # Install Docker and its dependent components
     - name: Install packages that allow apt to be used over HTTPS
       apt:
         name: "{{ packages }}"
@@ -43,6 +44,7 @@
         name: vagrant
         group: docker
 
+    # Kubelet will not start if the system has swap enabled/active, disable swap
     - name: Remove swapfile from /etc/fstab
       mount:
         name: "{{ item }}"
@@ -61,6 +63,7 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
 
+    # Install kubelet, kubeadm and kubectl
     - name: Adding the apt repository for Kubernetes
       apt_repository:
         repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
@@ -78,18 +81,21 @@
           - kubeadm 
           - kubectl
 
+    # Configure node ip address
     - name: Configure node ip
       lineinfile:
         create: yes
         path: /etc/default/kubelet
         line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
-
+    
+    # Restart the kubelet
     - name: Restart kubelet
       service:
         name: kubelet
         daemon_reload: yes
         state: restarted
 
+    # Copy the cluster join command to the server and join to cluster
     - name: Copy the cluster join command to server location
       copy: src=cluster-join dest=/tmp/cluster-join.sh mode=0777
 
@@ -97,5 +103,6 @@
       command: sh /tmp/cluster-join.sh
 
   handlers:
+    # Make sure that docker is started and running
     - name: docker status
       service: name=docker state=started
