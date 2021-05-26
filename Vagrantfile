@@ -2,12 +2,12 @@
 # vi: set ft=ruby :
 
 # This setup requires the following software to be installed on the host machine:
-# 1.) VirtualBox (host-only networking of 192.168.50.0)
+# 1.) VirtualBox (host-only networking interface with address space 192.168.50.0)
 # 2.) Vagrant
 # 3.) Ansible
 
 # The host machine must be running Linux or MacOS in order to be able to use the Ansible
-# provisioning mechanism, as well as recent version of OpenSSH thet supports ControlPersist.
+# provisioning mechanism, as well as recent version of OpenSSH that supports ControlPersist.
 
 # Linux distribution Vagrant box image:
 OS_IMAGE = "bento/ubuntu-20.04"
